@@ -3,12 +3,24 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { LocationIcon } from '../../components/illustrations/LocationIcon';
 import { useAuth } from '../../context/AuthContext';
 import { getLocations, getUnlockedLocationIds } from '../../services/world.service';
-import { CLAY, COLORS, TYPOGRAPHY } from '../../theme';
+import { CLAY, COLORS, TYPOGRAPHY, type ClayTone } from '../../theme';
 import type { LocationDef, RootStackParamList } from '../../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'WorldMap'>;
+
+// Each location gets its own tile color + icon so the grid reads as a set of distinct
+// places at a glance, not six identical blue boxes with only a name to tell them apart.
+const TILE_TONE_BY_KEY: Record<string, ClayTone> = {
+    cozy_home: 'sky',
+    sunny_cafe: 'sun',
+    pet_salon: 'coralPale',
+    starlight_school: 'grape',
+    meadow_park: 'mint',
+    candy_carnival: 'coral',
+};
 
 // The hub screen — a grid of location "tiles" a player taps into, mirroring Toca Boca
 // World's home map of unlockable locations. Locked tiles are dimmed with a lock icon;
@@ -37,10 +49,11 @@ export function WorldMapScreen({ navigation }: Props) {
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>My Minni World</Text>
-                <Pressable onPress={() => navigation.navigate('Settings')} hitSlop={12}>
-                    <Ionicons name="settings-sharp" size={24} color={COLORS.text.primary} />
+                <Pressable onPress={() => navigation.navigate('Settings')} hitSlop={12} style={styles.settingsButton}>
+                    <Ionicons name="settings-sharp" size={22} color={COLORS.text.primary} />
                 </Pressable>
             </View>
+            <Text style={styles.hint}>Tap an unlocked place to explore it. Locked ones open as you play!</Text>
 
             <FlatList
                 data={locations}
@@ -51,18 +64,28 @@ export function WorldMapScreen({ navigation }: Props) {
                 refreshing={isLoading}
                 renderItem={({ item }) => {
                     const unlocked = item.isDefault || unlockedIds.has(item.id);
+                    const tone = CLAY[TILE_TONE_BY_KEY[item.key] ?? 'sky'];
                     return (
                         <Pressable
                             disabled={!unlocked}
                             onPress={() => navigation.navigate('Location', { locationKey: item.key })}
-                            style={[styles.tile, { backgroundColor: unlocked ? CLAY.sky.base : CLAY.cream.base }]}
+                            style={[
+                                styles.tile,
+                                {
+                                    backgroundColor: unlocked ? tone.base : CLAY.cream.base,
+                                    borderBottomColor: unlocked ? tone.shadow : CLAY.cream.shadow,
+                                },
+                            ]}
                         >
                             {!unlocked && (
                                 <View style={styles.lockBadge}>
                                     <Ionicons name="lock-closed" size={16} color={COLORS.text.inverse} />
                                 </View>
                             )}
-                            <Text style={[styles.tileName, { color: unlocked ? COLORS.text.inverse : COLORS.text.muted }]}>
+                            <View style={styles.iconWrap}>
+                                <LocationIcon type={item.key} size={44} color={unlocked ? '#FFFFFF' : COLORS.text.muted} />
+                            </View>
+                            <Text style={[styles.tileName, { color: unlocked ? tone.text : COLORS.text.muted }]}>
                                 {item.name}
                             </Text>
                         </Pressable>
@@ -81,19 +104,36 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 24,
         paddingTop: 8,
-        paddingBottom: 16,
+    },
+    settingsButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: COLORS.surface,
     },
     title: { fontFamily: TYPOGRAPHY.fontFamilyDisplayExtraBold, fontSize: TYPOGRAPHY['2xl'], color: COLORS.text.primary },
+    hint: {
+        paddingHorizontal: 24,
+        marginTop: 6,
+        marginBottom: 12,
+        fontFamily: TYPOGRAPHY.fontFamily,
+        fontSize: TYPOGRAPHY.sm,
+        color: COLORS.text.secondary,
+    },
     grid: { paddingHorizontal: 16, paddingBottom: 24, gap: 16 },
     column: { gap: 16 },
     tile: {
         flex: 1,
-        aspectRatio: 1.3,
+        aspectRatio: 1.1,
         borderRadius: 24,
+        borderBottomWidth: 4,
         alignItems: 'center',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         padding: 12,
     },
+    iconWrap: { marginBottom: 8 },
     lockBadge: {
         position: 'absolute',
         top: 10,
@@ -102,5 +142,5 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 6,
     },
-    tileName: { fontFamily: TYPOGRAPHY.fontFamilyDisplay, fontSize: TYPOGRAPHY.lg },
+    tileName: { fontFamily: TYPOGRAPHY.fontFamilyDisplay, fontSize: TYPOGRAPHY.base, textAlign: 'center' },
 });
