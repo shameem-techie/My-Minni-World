@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -20,6 +21,17 @@ const TILE_TONE_BY_KEY: Record<string, ClayTone> = {
     starlight_school: 'grape',
     meadow_park: 'mint',
     candy_carnival: 'coral',
+};
+
+// Real illustrated icons cropped from the Stitch-generated World Map mockup (see
+// design/README.md) — Metro requires a static require() per key, so no dynamic path.
+const TILE_IMAGES: Record<string, ReturnType<typeof require>> = {
+    cozy_home: require('../../../assets/images/locations/cozy_home.png'),
+    sunny_cafe: require('../../../assets/images/locations/sunny_cafe.png'),
+    pet_salon: require('../../../assets/images/locations/pet_salon.png'),
+    starlight_school: require('../../../assets/images/locations/starlight_school.png'),
+    meadow_park: require('../../../assets/images/locations/meadow_park.png'),
+    candy_carnival: require('../../../assets/images/locations/candy_carnival.png'),
 };
 
 // The hub screen — a grid of location "tiles" a player taps into, mirroring Toca Boca
@@ -77,17 +89,28 @@ export function WorldMapScreen({ navigation }: Props) {
                                 },
                             ]}
                         >
-                            {!unlocked && (
-                                <View style={styles.lockBadge}>
-                                    <Ionicons name="lock-closed" size={16} color={COLORS.text.inverse} />
-                                </View>
+                            {unlocked && TILE_IMAGES[item.key] && (
+                                <Image
+                                    source={TILE_IMAGES[item.key]}
+                                    style={StyleSheet.absoluteFillObject}
+                                    contentFit="cover"
+                                />
                             )}
-                            <View style={styles.iconWrap}>
-                                <LocationIcon type={item.key} size={44} color={unlocked ? '#FFFFFF' : COLORS.text.muted} />
+                            {!unlocked && (
+                                <>
+                                    <View style={styles.iconWrap}>
+                                        <LocationIcon type={item.key} size={40} color={COLORS.text.muted} />
+                                    </View>
+                                    <View style={styles.lockBadge}>
+                                        <Ionicons name="lock-closed" size={16} color={COLORS.text.inverse} />
+                                    </View>
+                                </>
+                            )}
+                            <View style={styles.tileNamePill}>
+                                <Text style={[styles.tileName, { color: unlocked ? tone.text : COLORS.text.muted }]}>
+                                    {item.name}
+                                </Text>
                             </View>
-                            <Text style={[styles.tileName, { color: unlocked ? tone.text : COLORS.text.muted }]}>
-                                {item.name}
-                            </Text>
                         </Pressable>
                     );
                 }}
@@ -130,10 +153,18 @@ const styles = StyleSheet.create({
         borderRadius: 24,
         borderBottomWidth: 4,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         padding: 12,
+        overflow: 'hidden',
     },
-    iconWrap: { marginBottom: 8 },
+    iconWrap: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+    tileNamePill: {
+        backgroundColor: 'rgba(255,255,255,0.92)',
+        borderRadius: 14,
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        alignSelf: 'stretch',
+    },
     lockBadge: {
         position: 'absolute',
         top: 10,

@@ -8,21 +8,29 @@ Boca World-style visual language for My Minni World.
 
 ## Mockups (`stitch-mockups/`)
 
-| File | Screen | Maps to |
+| File | Screen | Status |
 |---|---|---|
-| `01-welcome.png` | Launch screen — app name, tagline, "Play Now" | `src/screens/onboarding/WelcomeScreen.tsx` |
-| `02-character-creator.png` | Minni paper-doll builder — skin/hair/outfit swatches | `src/screens/creator/CharacterCreatorScreen.tsx` |
-| `03-world-map.png` | Location grid hub, locked/unlocked tiles | `src/screens/world/WorldMapScreen.tsx` |
-| `04-sunny-cafe.png` | Sample room interior with a draggable-props tray | `src/screens/location/LocationScreen.tsx` |
+| `01-welcome.png` | Launch screen | Reference only — the real screen is code-built (`WelcomeScreen.tsx`), not an image |
+| `02-character-creator.png` | Minni paper-doll builder | Reference only — see note on character art below |
+| `03-world-map.png` | Location grid hub | **In use** — all 6 location icons cropped into `assets/images/locations/*.png`, rendered in `WorldMapScreen.tsx` |
+| `04-sunny-cafe-playroom.png` | Sunny Café interior (variant 1) | **In use** — wall/window section cropped into `assets/images/rooms/sunny_cafe_wall.png`, rendered as the room background in `LocationScreen.tsx` |
+| `05-sunny-cafe-interior.png` | Sunny Café interior (variant 2) | Reference only |
 
-These are **visual direction references**, not production assets — they're
-full HTML/CSS mockups (Stitch also generated downloadable HTML for each,
-linked from the project) rather than exportable sprite/vector art. The actual
-implementation screens currently render simplified placeholder shapes (see
-`CharacterCreatorScreen`'s colored circles, `LocationScreen`'s cube icons)
-until real character/prop artwork is produced in this style — e.g. via
-Higgsfield image generation or a commissioned/licensed illustration pack,
-using these mockups and `GAME_DESIGN.md`'s art-direction brief as the spec.
+**Fetching these at usable resolution:** Stitch's `screenshot.downloadUrl` is a
+`lh3.googleusercontent.com` link that serves a small default thumbnail
+(~180×512px) unless you append a size suffix — `?...=s2000` returns the image
+at up to 2000px on the long edge, which is what the files in this folder now
+are. This tripped us up once already: the first pass at these mockups was
+downloaded at default (thumbnail) size, decided to be too blurry to crop
+usable assets from, and the app shipped with hand-built SVG icons instead.
+Re-fetching with `=s2000` fixed that — don't repeat the mistake.
+
+## What's actually wired into the app vs. still a placeholder
+
+- **World Map tiles**: real cropped Stitch art (`assets/images/locations/`).
+- **Sunny Café room background**: real cropped Stitch art (`assets/images/rooms/`). Other locations (Cozy Home, etc.) don't have a matching interior mockup yet, so they still use a plain background color.
+- **Character (`MinniCharacter.tsx`) and room props (`PropIcon.tsx`)**: intentionally **not** replaced with cropped Stitch images. Those need to change dynamically with the player's color/style choices (skin tone, hair color, outfit color); a flattened PNG can't do that. They're hand-built `react-native-svg` vector components instead — free, crisp at any size, and easy to extend with new variants as the wardrobe grows. Revisit this if/when a proper layered-asset export pipeline exists (Stitch doesn't do per-layer exports; that'd need a different tool).
+- Real AI-generated art (Higgsfield or similar) is still an option for a future, more polished pass — it was skipped so far because the connected Higgsfield account is at 0 credits.
 
 ## Why not Blender
 

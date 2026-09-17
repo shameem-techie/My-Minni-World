@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PropIcon } from '../../components/illustrations/PropIcon';
@@ -24,6 +25,13 @@ const TILE_GAP = 20;
 function makePropInstanceId(): string {
     return 'placed_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
 }
+
+// Real room art cropped from the Stitch-generated Sunny Café mockup (design/README.md).
+// Only Sunny Café has one so far — other rooms fall back to the plain surface color
+// until matching interior mockups exist for them.
+const ROOM_BACKGROUNDS: Record<string, ReturnType<typeof require>> = {
+    sunny_cafe: require('../../../assets/images/rooms/sunny_cafe_wall.png'),
+};
 
 // A single explorable room. Free-play, no fail states or timers — tapping a prop puts it
 // away for now (a real tap-for-a-reaction interaction, and a wardrobe to bring in more
@@ -102,6 +110,13 @@ export function LocationScreen({ route }: Props) {
             {location && <Text style={styles.description}>{location.description}</Text>}
 
             <View style={styles.room}>
+                {ROOM_BACKGROUNDS[locationKey] && (
+                    <Image
+                        source={ROOM_BACKGROUNDS[locationKey]}
+                        style={StyleSheet.absoluteFillObject}
+                        contentFit="cover"
+                    />
+                )}
                 {!isLoading && props.length === 0 && (
                     <Text style={styles.empty}>
                         Nothing here yet — a wardrobe to bring in more props is coming soon.
@@ -149,6 +164,8 @@ const styles = StyleSheet.create({
         height: TILE_SIZE,
         borderRadius: 20,
         backgroundColor: COLORS.backgroundCard,
+        borderWidth: 1.5,
+        borderColor: COLORS.border,
         alignItems: 'center',
         justifyContent: 'center',
     },
