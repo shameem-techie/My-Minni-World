@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button } from '../../components/ui/Button';
@@ -37,6 +37,8 @@ export function CharacterCreatorScreen({ navigation, route }: Props) {
             navigation.replace('WorldMap');
         } catch (err) {
             console.warn('Could not save Minni', err);
+            const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+            Alert.alert('Could not save your Minni', message);
         } finally {
             setIsSaving(false);
         }

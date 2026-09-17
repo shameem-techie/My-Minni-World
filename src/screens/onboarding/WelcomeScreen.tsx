@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -26,6 +26,8 @@ export function WelcomeScreen({ navigation }: Props) {
             navigation.replace('CharacterCreator', { isFirstMinni: true });
         } catch (err) {
             console.warn('Guest sign-in failed', err);
+            const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+            Alert.alert('Could not start', message);
         } finally {
             setIsStarting(false);
         }
