@@ -46,7 +46,10 @@ const config: ExpoConfig = {
     // runtimeVersion + channel + `eas-cli update:configure` are wired up.
     updates: { enabled: false },
 
-    plugins: ['expo-dev-client'],
+    // No custom native modules yet, so this runs fine in plain Expo Go — don't add the
+    // expo-dev-client plugin back until a real native module actually requires a dev-client
+    // build (see the eas-cli / expo run:android note in README.md).
+    plugins: [],
 };
 
 export default config;
