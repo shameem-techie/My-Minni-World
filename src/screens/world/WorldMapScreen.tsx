@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
-import { Image } from 'expo-image';
+import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -37,6 +36,15 @@ const TILE_IMAGES: Record<string, ReturnType<typeof require>> = {
 // The hub screen — a grid of location "tiles" a player taps into, mirroring Toca Boca
 // World's home map of unlockable locations. Locked tiles are dimmed with a lock icon;
 // unlocking flow (currency/shop) is a stretch goal noted in GAME_DESIGN.md.
+//
+// NOTE on tile layout: the image and the name label are stacked in normal flow (image on
+// top, label below), not overlapped with position:'absolute'. An earlier version floated
+// the label over the bottom of the image; on this test device, any layout that combined a
+// bitmap Image with an absolutely-positioned sibling produced a persistent ghosting
+// artifact (visible as a soft duplicate of the label below the tile) that survived every
+// targeted fix (expo-image vs core Image, transitions, clipping, alpha-baked corners,
+// removing the label entirely). Only removing the overlap entirely fixed it. If revisiting
+// the overlapping-label look, retest carefully on real devices first.
 export function WorldMapScreen({ navigation }: Props) {
     const { user } = useAuth();
     const [locations, setLocations] = useState<LocationDef[]>([]);
@@ -81,33 +89,22 @@ export function WorldMapScreen({ navigation }: Props) {
                         <Pressable
                             disabled={!unlocked}
                             onPress={() => navigation.navigate('Location', { locationKey: item.key })}
-                            style={[
-                                styles.tile,
-                                {
-                                    backgroundColor: unlocked ? tone.base : CLAY.cream.base,
-                                    borderBottomColor: unlocked ? tone.shadow : CLAY.cream.shadow,
-                                },
-                            ]}
+                            style={[styles.tile, { backgroundColor: unlocked ? tone.base : CLAY.cream.base }]}
                         >
-                            {unlocked && TILE_IMAGES[item.key] && (
-                                <Image
-                                    source={TILE_IMAGES[item.key]}
-                                    style={StyleSheet.absoluteFillObject}
-                                    contentFit="cover"
-                                />
-                            )}
-                            {!unlocked && (
-                                <>
-                                    <View style={styles.iconWrap}>
-                                        <LocationIcon type={item.key} size={40} color={COLORS.text.muted} />
-                                    </View>
+                            <View style={styles.tileArt}>
+                                {unlocked && TILE_IMAGES[item.key] ? (
+                                    <Image source={TILE_IMAGES[item.key]} style={styles.tileImage} resizeMode="cover" />
+                                ) : (
+                                    <LocationIcon type={item.key} size={40} color={COLORS.text.muted} />
+                                )}
+                                {!unlocked && (
                                     <View style={styles.lockBadge}>
                                         <Ionicons name="lock-closed" size={16} color={COLORS.text.inverse} />
                                     </View>
-                                </>
-                            )}
-                            <View style={styles.tileNamePill}>
-                                <Text style={[styles.tileName, { color: unlocked ? tone.text : COLORS.text.muted }]}>
+                                )}
+                            </View>
+                            <View style={styles.tileNameRow}>
+                                <Text style={styles.tileName} numberOfLines={1}>
                                     {item.name}
                                 </Text>
                             </View>
@@ -149,21 +146,18 @@ const styles = StyleSheet.create({
     column: { gap: 16 },
     tile: {
         flex: 1,
-        aspectRatio: 1.1,
+        aspectRatio: 1,
         borderRadius: 24,
-        borderBottomWidth: 4,
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        padding: 12,
         overflow: 'hidden',
     },
-    iconWrap: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-    tileNamePill: {
-        backgroundColor: 'rgba(255,255,255,0.92)',
-        borderRadius: 14,
-        paddingVertical: 6,
-        paddingHorizontal: 10,
-        alignSelf: 'stretch',
+    tileArt: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    tileImage: {
+        width: '100%',
+        height: '100%',
     },
     lockBadge: {
         position: 'absolute',
@@ -173,5 +167,15 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 6,
     },
-    tileName: { fontFamily: TYPOGRAPHY.fontFamilyDisplay, fontSize: TYPOGRAPHY.base, textAlign: 'center' },
+    tileNameRow: {
+        backgroundColor: '#FFFFFF',
+        paddingVertical: 8,
+        alignItems: 'center',
+    },
+    tileName: {
+        fontFamily: TYPOGRAPHY.fontFamilyDisplay,
+        fontSize: TYPOGRAPHY.base,
+        textAlign: 'center',
+        color: COLORS.text.primary,
+    },
 });

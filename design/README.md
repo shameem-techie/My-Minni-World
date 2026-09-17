@@ -32,6 +32,24 @@ Re-fetching with `=s2000` fixed that — don't repeat the mistake.
 - **Character (`MinniCharacter.tsx`) and room props (`PropIcon.tsx`)**: intentionally **not** replaced with cropped Stitch images. Those need to change dynamically with the player's color/style choices (skin tone, hair color, outfit color); a flattened PNG can't do that. They're hand-built `react-native-svg` vector components instead — free, crisp at any size, and easy to extend with new variants as the wardrobe grows. Revisit this if/when a proper layered-asset export pipeline exists (Stitch doesn't do per-layer exports; that'd need a different tool).
 - Real AI-generated art (Higgsfield or similar) is still an option for a future, more polished pass — it was skipped so far because the connected Higgsfield account is at 0 credits.
 
+## Android rendering gotcha: don't overlap an Image with absolutely-positioned siblings
+
+On the physical Android test device used for this project (a Samsung Galaxy
+XCover Pro 2, `SM-G736B`), a tile layout that placed a bitmap `Image` behind
+an absolutely-positioned label (`position: 'absolute'` pill floating over the
+bottom of the image) produced a persistent ghosting artifact — a faint
+duplicate of the label rendered below the tile's rounded corners. It survived
+every targeted fix: switching between `expo-image` and React Native's core
+`Image`, disabling transitions/cache policy, removing `overflow: 'hidden'`,
+baking rounded corners into the PNG's alpha channel instead of clipping at
+runtime, and even removing the label text entirely (the image alone still
+ghosted). The only fix that worked was removing the overlap altogether —
+`WorldMapScreen.tsx`'s tiles now stack the image and the name label in normal
+flow (image on top, label below, no `position: 'absolute'` overlap) instead
+of floating the label over the image. If a design ever wants that floating
+label look back, retest carefully on a real Android device first, not just
+in a simulator.
+
 ## Why not Blender
 
 Toca Boca World's actual art is flat 2D paper-cutout illustration, not 3D —

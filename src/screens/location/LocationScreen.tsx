@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Image } from 'expo-image';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PropIcon } from '../../components/illustrations/PropIcon';
@@ -114,7 +113,7 @@ export function LocationScreen({ route }: Props) {
                     <Image
                         source={ROOM_BACKGROUNDS[locationKey]}
                         style={StyleSheet.absoluteFillObject}
-                        contentFit="cover"
+                        resizeMode="cover"
                     />
                 )}
                 {!isLoading && props.length === 0 && (
