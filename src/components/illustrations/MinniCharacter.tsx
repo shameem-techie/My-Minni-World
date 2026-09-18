@@ -1,5 +1,5 @@
-import React from 'react';
-import Svg, { Circle, Ellipse, Path, Rect } from 'react-native-svg';
+import React, { useId } from 'react';
+import Svg, { Circle, ClipPath, Defs, Ellipse, Image as SvgImage, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
 import type { MinniAppearance } from '../../types';
 
 const STROKE = '#3A2415';
@@ -90,7 +90,11 @@ function Face({ style }: { style: string }) {
 }
 
 export function MinniCharacter({ appearance, size = 160 }: MinniCharacterProps) {
-    const { skinTone, hairStyle, hairColor, faceStyle, outfitColor, accessoryIds } = appearance;
+    const { skinTone, hairStyle, hairColor, faceStyle, outfitColor, accessoryIds, faceMode, facePhotoUri } = appearance;
+    // Unique per instance so two Minnis with a real photo on screen at once (unlikely
+    // today, but cheap to guard against) don't collide on the same <ClipPath> id.
+    const clipId = `minniFaceClip-${useId()}`;
+    const hasPhoto = faceMode === 'photo' && !!facePhotoUri;
 
     return (
         <Svg width={size} height={size} viewBox="0 0 100 140">
@@ -102,9 +106,31 @@ export function MinniCharacter({ appearance, size = 160 }: MinniCharacterProps) 
             {/* arms */}
             <Rect x="18" y="74" width="11" height="30" rx="5.5" fill={skinTone} stroke={STROKE} strokeWidth={STROKE_WIDTH} />
             <Rect x="71" y="74" width="11" height="30" rx="5.5" fill={skinTone} stroke={STROKE} strokeWidth={STROKE_WIDTH} />
-            {/* head */}
-            <Circle cx="50" cy="46" r="26" fill={skinTone} stroke={STROKE} strokeWidth={STROKE_WIDTH} />
-            <Face style={faceStyle} />
+            {/* head — a real selfie the player cropped in, or the illustrated flat-color face */}
+            {hasPhoto ? (
+                <>
+                    <Defs>
+                        <ClipPath id={clipId}>
+                            <Circle cx="50" cy="46" r="26" />
+                        </ClipPath>
+                    </Defs>
+                    <SvgImage
+                        href={{ uri: facePhotoUri! }}
+                        x="24"
+                        y="20"
+                        width="52"
+                        height="52"
+                        preserveAspectRatio="xMidYMid slice"
+                        clipPath={`url(#${clipId})`}
+                    />
+                    <Circle cx="50" cy="46" r="26" fill="none" stroke={STROKE} strokeWidth={STROKE_WIDTH} />
+                </>
+            ) : (
+                <>
+                    <Circle cx="50" cy="46" r="26" fill={skinTone} stroke={STROKE} strokeWidth={STROKE_WIDTH} />
+                    <Face style={faceStyle} />
+                </>
+            )}
             {/* hair (on top) */}
             <Hair style={hairStyle} color={hairColor} />
             {/* accessories */}
@@ -123,6 +149,28 @@ export function MinniCharacter({ appearance, size = 160 }: MinniCharacterProps) 
             )}
             {accessoryIds.includes('acc_backpack') && (
                 <Rect x="12" y="78" width="12" height="20" rx="4" fill="#B368E0" stroke={STROKE} strokeWidth={1.6} />
+            )}
+            {accessoryIds.includes('acc_antennae') && (
+                <>
+                    <Path d="M36 14 Q30 4 24 2" stroke="#7CF0C4" strokeWidth={2.4} fill="none" strokeLinecap="round" />
+                    <Path d="M64 14 Q70 4 76 2" stroke="#7CF0C4" strokeWidth={2.4} fill="none" strokeLinecap="round" />
+                    <Path d="M24 2l1.6 3.3 3.6.3-2.7 2.4.8 3.5L24 9.7l-3.3 1.8.8-3.5L18.8 5.6l3.6-.3z" fill="#FFD166" stroke={STROKE} strokeWidth={0.8} />
+                    <Path d="M76 2l1.6 3.3 3.6.3-2.7 2.4.8 3.5L76 9.7l-3.3 1.8.8-3.5L70.8 5.6l3.6-.3z" fill="#FFD166" stroke={STROKE} strokeWidth={0.8} />
+                </>
+            )}
+            {accessoryIds.includes('acc_helmet') && (
+                <>
+                    <Defs>
+                        <RadialGradient id="helmet" cx="35%" cy="28%" r="70%">
+                            <Stop offset="0" stopColor="#FFFFFF" stopOpacity={0.75} />
+                            <Stop offset="0.45" stopColor="#4CC9F0" stopOpacity={0.22} />
+                            <Stop offset="1" stopColor="#9D4EDD" stopOpacity={0.35} />
+                        </RadialGradient>
+                    </Defs>
+                    <Circle cx="50" cy="42" r="36" fill="url(#helmet)" stroke="#FFFFFF" strokeWidth={2.5} />
+                    <Ellipse cx="36" cy="20" rx="9" ry="4" fill="#FFFFFF" opacity={0.8} transform="rotate(-25 36 20)" />
+                    <Rect x="30" y="72" width="40" height="8" rx="4" fill="#E9E1FF" stroke={STROKE} strokeWidth={1.4} />
+                </>
             )}
         </Svg>
     );

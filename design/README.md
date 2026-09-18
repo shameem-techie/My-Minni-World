@@ -1,59 +1,65 @@
-# Design — Candy Sandbox
+# Design — Cosmic Bubble & Star Soda
 
-Art direction and screen mockups generated via Stitch, establishing the Toca
-Boca World-style visual language for My Minni World.
+Art direction and screen mockups generated via Stitch. As of 2026-09-18 the app is built
+entirely around the **"Cosmic Bubble Asset Stack & Integration Manifest"** — the earlier
+"Candy Sandbox" mockups (`stitch-mockups/01–05`) are kept for reference only.
 
 - **Stitch project:** [My Minni World](https://stitch.withgoogle.com/projects/4385641576800933315) (project id `4385641576800933315`)
-- **Design system:** "Candy Sandbox" (asset id `assets/14496597097888735785`) — Quicksand-style rounded headline font, Nunito Sans body font, `ROUND_TWELVE` corner radius, vibrant color variant seeded from coral `#FF7A59` / sky blue `#4FC3E8` / sunny yellow `#FFCB3D`. Full art-direction brief is in the design system's `designMd` (also summarized in [GAME_DESIGN.md](../GAME_DESIGN.md)).
+- **Manifest screen:** "Cosmic Bubble Asset Stack & Integration Manifest (Updated with Logos)" (screen `9ddbb3c6…`) — a copy is in [`stitch-mockups/cosmic-bubble/MANIFEST.md`](./stitch-mockups/cosmic-bubble/MANIFEST.md). It lists every asset key, its recommended file name, and the design tokens.
 
-## Mockups (`stitch-mockups/`)
+## Asset stack → `assets/themes/cosmic_bubble/`
 
-| File | Screen | Status |
+The manifest's directory layout is used verbatim. Every file is registered in
+`src/assets/cosmicBubble.ts` (Metro needs a static `require()` per image).
+
+| Manifest group | Files | Used by |
 |---|---|---|
-| `01-welcome.png` | Launch screen | Reference only — the real screen is code-built (`WelcomeScreen.tsx`), not an image |
-| `02-character-creator.png` | Minni paper-doll builder | Reference only — see note on character art below |
-| `03-world-map.png` | Location grid hub | **In use** — all 6 location icons cropped into `assets/images/locations/*.png`, rendered in `WorldMapScreen.tsx` |
-| `04-sunny-cafe-playroom.png` | Sunny Café interior (variant 1) | **In use** — wall/window section cropped into `assets/images/rooms/sunny_cafe_wall.png`, rendered as the room background in `LocationScreen.tsx` |
-| `05-sunny-cafe-interior.png` | Sunny Café interior (variant 2) | Reference only |
+| `branding/` | iOS squircle icon, Android round icon, bubble planet + castle icons, 3 vector SVGs (wordmark, squircle badge, Android vector) | `assets/images/icon.png` / `adaptive-icon.png` / `splash-icon.png` are derived from the two 3D icons (see below). The wordmark's mascot emblem is ported to `CosmicMascot.tsx`; the 3D title text is `CosmicWordmark.tsx`. |
+| `maps/` | `cosmic_island_city_map.png`, `transit_market_district_map.png` | `WorldMapScreen` — the two map districts with bobbing pins over each building |
+| `playsets/` | 17 × 1200×896 cutaway interiors | `PlayRoomScreen` — one room per playset, hotspots + spawned props layered on top |
+| `characters/` | `alien_bubble_kid.png`, `alien_pet_creature.png` (+ circle-masked copies) | Welcome hero cast, the "Sparkle Star Blob" legendary gacha pet |
 
-**Fetching these at usable resolution:** Stitch's `screenshot.downloadUrl` is a
-`lh3.googleusercontent.com` link that serves a small default thumbnail
-(~180×512px) unless you append a size suffix — `?...=s2000` returns the image
-at up to 2000px on the long edge, which is what the files in this folder now
-are. This tripped us up once already: the first pass at these mockups was
-downloaded at default (thumbnail) size, decided to be too blurry to crop
-usable assets from, and the app shipped with hand-built SVG icons instead.
-Re-fetching with `=s2000` fixed that — don't repeat the mistake.
+**Format gotcha:** every raster Stitch serves is JPEG data even though the manifest (and the
+`screenshot` download) call it `.png`. Android's AAPT rejects a JPEG named `.png` at
+build time, so the stack is stored as `.jpg`; only locally generated alpha cutouts are PNG.
 
-## What's actually wired into the app vs. still a placeholder
+**Icons:** the Stitch icon renders sit on a light-grey backdrop with a drop shadow. The
+squircle / circle were located by saturation (grey shadow pixels excluded) and the iOS
+one was made full-bleed by extending its edge colours into the corners — iOS applies its
+own mask, so a pre-rounded PNG would show grey corners. The Android adaptive foreground
+is the round render scaled to 80% on a transparent canvas over a magenta→violet→cyan
+`adaptive-icon-bg.png`, so every launcher mask shape looks intentional.
 
-- **World Map tiles**: real cropped Stitch art (`assets/images/locations/`).
-- **Sunny Café room background**: real cropped Stitch art (`assets/images/rooms/`). Other locations (Cozy Home, etc.) don't have a matching interior mockup yet, so they still use a plain background color.
-- **Character (`MinniCharacter.tsx`) and room props (`PropIcon.tsx`)**: intentionally **not** replaced with cropped Stitch images. Those need to change dynamically with the player's color/style choices (skin tone, hair color, outfit color); a flattened PNG can't do that. They're hand-built `react-native-svg` vector components instead — free, crisp at any size, and easy to extend with new variants as the wardrobe grows. Revisit this if/when a proper layered-asset export pipeline exists (Stitch doesn't do per-layer exports; that'd need a different tool).
-- Real AI-generated art (Higgsfield or similar) is still an option for a future, more polished pass — it was skipped so far because the connected Higgsfield account is at 0 credits.
+**Fetching Stitch art at usable resolution:** `screenshot.downloadUrl` serves a small
+thumbnail unless you append `=s2000`. The pull script that downloaded this whole stack
+(all 63 screens, HTML + 2000px screenshots, in parallel) is a 30-line Node script; the
+approach is the same as RummySekai's `scripts/pull-stitch-stack.mjs`.
 
-## Android rendering gotcha: don't overlap an Image with absolutely-positioned siblings
+## Screens built from the Stitch UI mockups (`stitch-mockups/cosmic-bubble/`)
 
-On the physical Android test device used for this project (a Samsung Galaxy
-XCover Pro 2, `SM-G736B`), a tile layout that placed a bitmap `Image` behind
-an absolutely-positioned label (`position: 'absolute'` pill floating over the
-bottom of the image) produced a persistent ghosting artifact — a faint
-duplicate of the label rendered below the tile's rounded corners. It survived
-every targeted fix: switching between `expo-image` and React Native's core
-`Image`, disabling transitions/cache policy, removing `overflow: 'hidden'`,
-baking rounded corners into the PNG's alpha channel instead of clipping at
-runtime, and even removing the label text entirely (the image alone still
-ghosted). The only fix that worked was removing the overlap altogether —
-`WorldMapScreen.tsx`'s tiles now stack the image and the name label in normal
-flow (image on top, label below, no `position: 'absolute'` overlap) instead
-of floating the label over the image. If a design ever wants that floating
-label look back, retest carefully on a real Android device first, not just
-in a simulator.
+| Stitch screen | App screen |
+|---|---|
+| Welcome — Cosmic Bubble (`0aa32da1`) | `WelcomeScreen` — bubblegum sky gradient, floating soda bubbles, 3D wordmark, bobbing hero cast, PLAY NOW pill |
+| Cosmic Island City — Interactive World Map (`127021d0`) + Transit & Market District (`64da6f5e`) | `WorldMapScreen` — explorer header, district switcher, map with pins, zone cards, unlock sheet |
+| Cosmic Minni Maker — Creator (`bf8eb28c`) | `CharacterCreatorScreen` — stage + platform, Rotate/Random/Pose, category pills, swatches |
+| Sweet Lilac Bungalow — Play Room (`ce248f69`) and the other 16 play rooms | `PlayRoomScreen` — scene hotspots, Minni + pet, draggable props, actions, star routine, props tray |
+| Mystery Orb & Star Shop (`f245f7c0`) | `StarShopScreen` — orb gacha, reveal card, daily pod, pet house, packs |
+
+Design tokens (`#F72585` magenta, `#9D4EDD` violet, `#4CC9F0` cyan, `#FFD166` gold,
+`#FEF7FF`/`#FAF0FF` surfaces, Rubik headline + Nunito Sans body, 24–32px clay radii)
+live in `src/theme/colors.ts` and `src/theme/typography.ts`.
+
+## Android rendering gotcha (still applies): bitmap Image + absolutely-positioned siblings
+
+On the physical Samsung Galaxy XCover Pro 2 (`SM-G736B`) an earlier build showed a
+persistent ghosting artifact when an `Image` was overlapped by an absolutely-positioned
+label inside a clipped, rounded tile. The map and play-room scenes in this build *do*
+overlap images with pins/hotspots, but the image is isolated in its own clipped frame
+(`sceneFrame` / `mapFrame`, `overflow: 'hidden'` + radius) and the interactive layer is a
+separate sibling `View` on top — retest on the device after any change to that layering.
 
 ## Why not Blender
 
-Toca Boca World's actual art is flat 2D paper-cutout illustration, not 3D —
-matched here by the "Candy Sandbox" direction above. Blender is available in
-this workspace but isn't the right tool for character/prop sprites in this
-style; it'd only come into play if the game later added true 3D elements
-(e.g. a 3D app icon render or a diorama-style promo shot).
+Toca Boca World's art is flat/claymorphic 2D illustration; the Stitch stack already
+provides finished 3D-look renders. Blender would only come into play for true 3D
+elements (e.g. a rotating 3D icon render).

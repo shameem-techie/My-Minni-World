@@ -30,7 +30,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         const unsub = subscribeToAuth(async (userId) => {
             if (userId) {
-                const profile = await getUserProfile(userId);
+                // A signed-in session whose profile fetch fails (offline) still gets the cached
+                // profile — otherwise Play Now would mint a brand-new guest and lose progress.
+                const profile = (await getUserProfile(userId)) ?? (await getLocalProfile());
                 finish(profile);
             } else {
                 const local = await getLocalProfile();

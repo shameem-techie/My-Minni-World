@@ -1,14 +1,16 @@
+// Rubik for headlines / UI chrome (chubby, rounded — the Stitch "Cosmic Bubble" screens
+// set `font-headline: Rubik`), Nunito Sans for body copy. Fonts are loaded in App.tsx
+// but rendering never waits on them: a missing family just falls back to the system font.
 export const TYPOGRAPHY = {
-    // Baloo 2 for headers/UI chrome (rounded, playful — matches the clay-tile look),
-    // Nunito for body copy (friendly but more legible at small sizes).
-    fontFamily: 'Nunito_400Regular',
-    fontFamilyBold: 'Nunito_700Bold',
-    fontFamilySemiBold: 'Nunito_600SemiBold',
+    fontFamily: 'NunitoSans_400Regular',
+    fontFamilySemiBold: 'NunitoSans_600SemiBold',
+    fontFamilyBold: 'NunitoSans_700Bold',
+    fontFamilyExtraBold: 'NunitoSans_800ExtraBold',
 
-    fontFamilyDisplay: 'Baloo2_700Bold',
-    fontFamilyDisplayExtraBold: 'Baloo2_800ExtraBold',
+    fontFamilyDisplay: 'Rubik_700Bold',
+    fontFamilyDisplayExtraBold: 'Rubik_800ExtraBold',
+    fontFamilyDisplayBlack: 'Rubik_900Black',
 
-    light: '300' as const,
     regular: '400' as const,
     semibold: '600' as const,
     bold: '700' as const,
@@ -22,5 +24,5 @@ export const TYPOGRAPHY = {
     '2xl': 22,
     '3xl': 26,
     '4xl': 32,
-    '5xl': 42,
+    '5xl': 44,
 };

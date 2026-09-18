@@ -1,74 +1,115 @@
-// "Candy Sandbox" palette — warm, saturated, paper-cutout playfulness in the spirit of
-// Toca Boca World: cream/sand backgrounds, candy-bright accents, soft rounded clay tiles.
-// No dark mode — this app targets kids and always renders in bright daylight colors.
+// "Cosmic Bubble & Star Soda" palette — straight from the Stitch asset-stack manifest
+// (design/stitch-mockups/cosmic-bubble/MANIFEST.md): neon magenta, star-glow violet,
+// nebula cyan, star-honey yellow over light celestial pastels. Tactile claymorphism:
+// pill/clay radii (24–32), flat "extruded" bottom edges, jelly-glass highlights.
+// No dark mode — this is a kids' app and always renders bright.
 
-export const GRADIENT_SUNSET = ['#FFE1A8', '#FFC5A3', '#FFA3C0'] as const;
+export const COSMIC = {
+    magenta: '#F72585',
+    magentaLight: '#FF4D9E',
+    magentaDark: '#B5005D',
+    magentaDeep: '#9E004B',
 
-// "Clay" tactile tone pairs, same shape as Cards-and-Chaos's CLAY palette: a `base` fill,
-// a `shadow` used as a flat bottom border to fake a sculpted/extruded edge, plus text pairs.
+    violet: '#9D4EDD',
+    grape: '#5A189A',
+    grapeLight: '#7B2CBF',
+    grapeDeep: '#3A0CA3',
+    ink: '#270057',
+
+    aqua: '#4CC9F0',
+    aquaDark: '#0096C7',
+    aquaDeep: '#006780',
+    aquaPale: '#CFF4FF',
+
+    gold: '#FFD166',
+    goldDark: '#E0A300',
+    goldDeep: '#936F03',
+    goldPale: '#FFF3B0',
+
+    mint: '#7CF0C4',
+    mintDark: '#1E9E63',
+    mintPale: '#DDFBEF',
+
+    pink: '#FF70A6',
+    pinkPale: '#FFE0EE',
+    lilac: '#E9D5FF',
+    lilacPale: '#F5EAFF',
+
+    surface: '#FEF7FF',
+    surfaceLow: '#FAF0FF',
+    surfaceContainer: '#F5EAFF',
+    surfaceHigh: '#F0E3FF',
+    white: '#FFFFFF',
+
+    onSurface: '#270057',
+    onSurfaceVariant: '#5A3F47',
+    muted: '#9A86B8',
+} as const;
+
+// Welcome-screen sky: bubblegum pink at the top fading through lilac to a soft sky blue.
+export const GRADIENT_SKY = ['#F9C4E6', '#F1D6F7', '#D6E7FD'] as const;
+export const GRADIENT_MAGENTA = ['#FF4D9E', '#F72585', '#D9046C'] as const;
+export const GRADIENT_NEBULA = ['#4CC9F0', '#7209B7', '#F72585'] as const;
+export const GRADIENT_SPACE = ['#2B0A5E', '#4A1A8A', '#7B2CBF'] as const;
+export const GRADIENT_LILAC_CARD = ['#F7EEFF', '#EBDCFF'] as const;
+
+// Clay tone pairs: a `base` fill, a flat `shadow` bottom edge (the fake 3D extrusion),
+// plus text colours that read on top of them.
 export const CLAY = {
-    coral: { base: '#FF7A59', shadow: '#C2431F', text: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
-    coralPale: { base: '#FFDCCF', shadow: '#C2431F', text: '#8A3010', sub: '#B0603F' },
-    sky: { base: '#4FC3E8', shadow: '#0E7FA3', text: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
-    skyPale: { base: '#CFF0FA', shadow: '#0E7FA3', text: '#0A5A73', sub: '#3E8398' },
-    sun: { base: '#FFCB3D', shadow: '#C4930A', text: '#5A4200', sub: '#8A6E20' },
-    grape: { base: '#B368E0', shadow: '#7A3AA8', text: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
-    mint: { base: '#6FDCA8', shadow: '#1E9E63', text: '#0B4D2C', sub: '#3C7A5C' },
-    lilac: { base: '#F1E4FF', shadow: '#CBA8EE', text: '#4B2E70', sub: '#7A5FA0' },
-    cream: { base: '#FFF8EC', shadow: '#F0DCBB', text: '#5A4426', sub: '#8A7550' },
+    magenta: { base: '#F72585', shadow: '#9E004B', text: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
+    violet: { base: '#9D4EDD', shadow: '#5A189A', text: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
+    grape: { base: '#7B2CBF', shadow: '#3A0CA3', text: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
+    aqua: { base: '#4CC9F0', shadow: '#0096C7', text: '#03045E', sub: '#0A5A73' },
+    teal: { base: '#0096C7', shadow: '#006780', text: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
+    gold: { base: '#FFD166', shadow: '#E0A300', text: '#5A3A00', sub: '#8A6E20' },
+    mint: { base: '#7CF0C4', shadow: '#1E9E63', text: '#0B4D2C', sub: '#3C7A5C' },
+    lilac: { base: '#F0E3FF', shadow: '#C9A7F5', text: '#270057', sub: '#7A5FA0' },
+    snow: { base: '#FFFFFF', shadow: '#E4D4FF', text: '#270057', sub: '#7A5FA0' },
+    pink: { base: '#FFD6E8', shadow: '#F49AC1', text: '#B5005D', sub: '#C2557F' },
 } as const;
 
 export type ClayTone = keyof typeof CLAY;
 
-// Fixed set of skin tones, hair colors, and outfit accent colors offered in the
-// character creator — deliberately small, bright, and mix-and-match (paper-doll layers).
-export const SKIN_TONES = ['#FFE0BD', '#F1C27D', '#E0AC69', '#C68642', '#8D5524', '#5C3A21'] as const;
-export const HAIR_COLORS = ['#2B1B12', '#6B3F1D', '#C68642', '#E8C468', '#E85D75', '#5D8FE8', '#8FE85D', '#B368E0'] as const;
-export const OUTFIT_COLORS = ['#FF7A59', '#4FC3E8', '#FFCB3D', '#B368E0', '#6FDCA8', '#F06292', '#FFFFFF', '#4B2E70'] as const;
+// Character creator palettes — small, bright, mix-and-match.
+export const SKIN_TONES = ['#FFE0BD', '#F1C27D', '#E0AC69', '#C68642', '#8D5524', '#5C3A21', '#B8F0D8', '#D9C6FF'] as const;
+export const HAIR_COLORS = ['#2B1B12', '#6B3F1D', '#C68642', '#FFD166', '#F72585', '#4CC9F0', '#7CF0C4', '#9D4EDD'] as const;
+export const OUTFIT_COLORS = ['#F72585', '#4CC9F0', '#FFD166', '#9D4EDD', '#7CF0C4', '#FF70A6', '#FFFFFF', '#3A0CA3'] as const;
 
 export const COLORS = {
-    // App backgrounds
-    background: '#FFF8EC',
-    backgroundCard: '#FFFFFF',
-    backgroundDark: '#4B2E70',
-    surface: '#FFF1D9',
+    background: COSMIC.surface,
+    backgroundCard: COSMIC.white,
+    backgroundDark: COSMIC.ink,
+    surface: COSMIC.surfaceContainer,
+    surfaceHigh: COSMIC.surfaceHigh,
 
-    // Primary brand: sunny coral
-    primary: '#FF7A59',
-    primaryLight: '#FF9B7F',
-    primaryDark: '#C2431F',
+    primary: COSMIC.magenta,
+    primaryLight: COSMIC.magentaLight,
+    primaryDark: COSMIC.magentaDark,
+    accent: COSMIC.aqua,
+    gold: COSMIC.gold,
 
-    // Accent: sky blue
-    accent: '#4FC3E8',
-
-    // Semantic
     success: '#22C55E',
     successLight: '#DCF5E7',
     warning: '#F59E0B',
     warningLight: '#FEF3C7',
     error: '#EF4444',
     errorLight: '#FEE2E2',
-    info: '#4FC3E8',
 
-    // Text
     text: {
-        primary: '#4B2E1A',
-        secondary: '#8A6E4E',
-        muted: '#B8A582',
-        inverse: '#FFFFFF',
-        onCard: '#FFFFFF',
-        onDarkSecondary: 'rgba(255,255,255,0.72)',
-        onDarkMuted: 'rgba(255,255,255,0.50)',
+        primary: COSMIC.onSurface,
+        secondary: COSMIC.onSurfaceVariant,
+        muted: COSMIC.muted,
+        inverse: COSMIC.white,
+        magenta: COSMIC.magentaDark,
+        onDarkSecondary: 'rgba(255,255,255,0.75)',
     },
 
-    // UI
-    border: '#F0DCBB',
-    borderDark: '#E0BE8A',
-    shadow: 'rgba(194, 67, 31, 0.15)',
-    overlay: 'rgba(75, 46, 26, 0.55)',
+    border: '#E9D8FF',
+    borderStrong: '#D4B8FF',
+    shadow: 'rgba(90, 24, 154, 0.18)',
+    overlay: 'rgba(39, 0, 87, 0.55)',
 
-    // "Frosted" surfaces for cards/rows/inputs over photos or gradients
-    glass: 'rgba(255,255,255,0.55)',
-    glassBorder: 'rgba(255,255,255,0.7)',
-    glassStrong: 'rgba(255,255,255,0.75)',
+    glass: 'rgba(255,255,255,0.6)',
+    glassBorder: 'rgba(255,255,255,0.8)',
+    glassStrong: 'rgba(255,255,255,0.8)',
 };

@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220" width="100%" height="100%">
+  <defs>
+    <!-- Wordmark Gradients -->
+    <linearGradient id="textGradMinni" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="35%" stop-color="#FAF0FF" />
+      <stop offset="70%" stop-color="#F72585" />
+      <stop offset="100%" stop-color="#B5179E" />
+    </linearGradient>
+
+    <linearGradient id="textGradWorld" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFF3B0" />
+      <stop offset="40%" stop-color="#FFD166" />
+      <stop offset="85%" stop-color="#F77F00" />
+      <stop offset="100%" stop-color="#D62828" />
+    </linearGradient>
+
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4CC9F0" />
+      <stop offset="50%" stop-color="#7209B7" />
+      <stop offset="100%" stop-color="#F72585" />
+    </linearGradient>
+
+    <!-- Star Fill -->
+    <linearGradient id="starFill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="40%" stop-color="#FFD166" />
+      <stop offset="100%" stop-color="#F72585" />
+    </linearGradient>
+
+    <!-- 3D Layer Shadow -->
+    <filter id="logoShadow" x="-10%" y="-10%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#240046" flood-opacity="0.4" />
+    </filter>
+    <filter id="textDepth" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="3" flood-color="#3A0CA3" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <style>
+    .title-sub {
+      font-family: 'Rubik', 'Fredoka', 'Nunito', sans-serif;
+      font-weight: 900;
+      letter-spacing: 4px;
+    }
+    .title-main {
+      font-family: 'Rubik', 'Fredoka', 'Bricolage Grotesque', sans-serif;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+  </style>
+
+  <!-- Left Side Logo Mascot Emblem -->
+  <g transform="translate(110, 110)" filter="url(#logoShadow)">
+    <!-- Mascot Aura Bubble -->
+    <circle cx="0" cy="0" r="74" fill="url(#badgeGrad)" stroke="#FFFFFF" stroke-width="7" />
+    
+    <!-- Inner Orbit Ring -->
+    <ellipse cx="0" cy="6" rx="88" ry="30" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" transform="rotate(-18)" opacity="0.9" />
+    <ellipse cx="0" cy="6" rx="88" ry="30" fill="none" stroke="#4CC9F0" stroke-width="5" stroke-linecap="round" transform="rotate(-18)" />
+
+    <!-- Cute Smiling Star Mascot -->
+    <polygon points="0,-48 14,-14 48,-14 20,8 30,42 0,22 -30,42 -20,8 -48,-14 -14,-14" fill="url(#starFill)" stroke="#FFFFFF" stroke-width="5" />
+
+    <!-- Star Face -->
+    <circle cx="-8" cy="2" r="3.5" fill="#240046" />
+    <circle cx="8" cy="2" r="3.5" fill="#240046" />
+    <path d="M -4 9 Q 0 14 4 9" fill="none" stroke="#240046" stroke-width="2.5" stroke-linecap="round" />
+    <ellipse cx="-13" cy="7" rx="3.5" ry="2" fill="#F72585" />
+    <ellipse cx="13" cy="7" rx="3.5" ry="2" fill="#F72585" />
+
+    <!-- Little Bubble Accents -->
+    <circle cx="-42" cy="-40" r="9" fill="#4CC9F0" stroke="#FFFFFF" stroke-width="2" />
+    <circle cx="48" cy="-35" r="7" fill="#FFD166" stroke="#FFFFFF" stroke-width="2" />
+  </g>
+
+  <!-- Wordmark Text Group -->
+  <g transform="translate(225, 45)">
+    <!-- "MY" Tag Bubble Pill -->
+    <rect x="0" y="8" width="68" height="34" rx="17" fill="#4CC9F0" stroke="#FFFFFF" stroke-width="3" filter="url(#logoShadow)" />
+    <text x="34" y="32" text-anchor="middle" fill="#03045E" class="title-sub" font-size="19">MY</text>
+
+    <!-- Sparkling Star between MY and MINNI -->
+    <path d="M 90 24 Q 90 32 82 32 Q 90 32 90 40 Q 90 32 98 32 Q 90 32 90 24 Z" fill="#FFD166" stroke="#FFFFFF" stroke-width="1.5" />
+
+    <!-- "MINNI" Primary Playful 3D Wordmark -->
+    <!-- 3D Bottom Extrusion Shadow -->
+    <text x="110" y="44" fill="#3A0CA3" class="title-main" font-size="52" filter="url(#textDepth)">MINNI</text>
+    <!-- Main Fill with stroke -->
+    <text x="110" y="40" fill="url(#textGradMinni)" stroke="#FFFFFF" stroke-width="6" paint-order="stroke fill" class="title-main" font-size="52">MINNI</text>
+
+    <!-- "WORLD" Secondary Chubby Block Wordmark -->
+    <!-- 3D Extrusion Shadow -->
+    <text x="0" y="116" fill="#6A040F" class="title-main" font-size="70" filter="url(#textDepth)">WORLD</text>
+    <!-- Main Fill with stroke -->
+    <text x="0" y="110" fill="url(#textGradWorld)" stroke="#FFFFFF" stroke-width="8" paint-order="stroke fill" class="title-main" font-size="70">WORLD</text>
+
+    <!-- Theme Subtitle Ribbon / Pill -->
+    <g transform="translate(290, 85)" filter="url(#logoShadow)">
+      <rect x="0" y="0" width="200" height="30" rx="15" fill="#7209B7" stroke="#FAF0FF" stroke-width="2" />
+      <text x="100" y="20" text-anchor="middle" fill="#FFFFFF" class="title-sub" font-size="11">COSMIC BUBBLE</text>
+      <circle cx="16" cy="15" r="4" fill="#4CC9F0" />
+      <circle cx="184" cy="15" r="4" fill="#FFD166" />
+    </g>
+
+    <!-- Decorative Stars & Soda Bubbles -->
+    <!-- Magenta Sparkle -->
+    <path d="M 275 18 Q 275 27 266 27 Q 275 27 275 36 Q 275 27 284 27 Q 275 27 275 18 Z" fill="#F72585" stroke="#FFFFFF" stroke-width="1.5" />
+    <!-- Cyan Bubble -->
+    <circle cx="310" cy="30" r="8" fill="#4CC9F0" stroke="#FFFFFF" stroke-width="2" opacity="0.9" />
+    <circle cx="308" cy="28" r="2.5" fill="#FFFFFF" />
+    <!-- Gold Sparkle -->
+    <path d="M 285 118 Q 285 125 278 125 Q 285 125 285 132 Q 285 125 292 125 Q 285 125 285 118 Z" fill="#FFD166" stroke="#FFFFFF" stroke-width="1.5" />
+  </g>
+</svg>
