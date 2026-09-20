@@ -27,7 +27,7 @@ export function WelcomeScreen({ navigation }: Props) {
 
     const handlePlayNow = async () => {
         if (user) {
-            navigation.replace('WorldMap');
+            navigation.replace('GalaxyMap');
             return;
         }
         setIsStarting(true);
@@ -116,7 +116,7 @@ export function WelcomeScreen({ navigation }: Props) {
                             size="sm"
                             leading="🌍"
                             style={{ flex: 1 }}
-                            onPress={() => (user ? navigation.navigate('WorldMap') : handlePlayNow())}
+                            onPress={() => (user ? navigation.navigate('GalaxyMap') : handlePlayNow())}
                         />
                     </View>
                     <Text style={styles.footer}>🛡️ 100% Safe Kids Sandbox • No login needed</Text>

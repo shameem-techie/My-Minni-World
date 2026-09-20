@@ -18,9 +18,29 @@ export const BRANDING = {
 export const MAPS = {
     island: require('../../assets/themes/cosmic_bubble/maps/cosmic_island_city_map.jpg'),
     transit: require('../../assets/themes/cosmic_bubble/maps/transit_market_district_map.jpg'),
+    galaxy: require('../../assets/themes/cosmic_bubble/maps/galaxy_aerial_world_map.jpg'),
 } as const;
 
+// Raw, unbuilt land plots for the Land Explorer (src/screens/land/). Stitch's
+// "Next-Level" manifest rendered dedicated art for 2 of the 4 sellable plots
+// (Starlight Crater, Bubble Lagoon) plus a macro map, but all three had a "Toca Life
+// World" logo baked into the pixels (a real trademark, not croppable out cleanly) —
+// see project memory for the full finding. None of them are usable, so this registry
+// is empty until clean re-renders exist; every plot uses the tone/icon card fallback
+// (see src/constants/landPlots.ts) instead of a hero image for now.
+export const PLOTS_RAW = {} as const;
+
+export type PlotRawImageKey = keyof typeof PLOTS_RAW;
+
 export const PLAYSETS = {
+    sparkle_jungle: require('../../assets/themes/cosmic_bubble/playsets/sparkle_jungle.jpg'),
+    astronaut_academy: require('../../assets/themes/cosmic_bubble/playsets/astronaut_academy.jpg'),
+    space_carnival: require('../../assets/themes/cosmic_bubble/playsets/space_carnival.jpg'),
+    candy_nebulae: require('../../assets/themes/cosmic_bubble/playsets/candy_nebulae.jpg'),
+    ocean_reef: require('../../assets/themes/cosmic_bubble/playsets/ocean_reef.jpg'),
+    robot_factory: require('../../assets/themes/cosmic_bubble/playsets/robot_factory.jpg'),
+    crystal_caves: require('../../assets/themes/cosmic_bubble/playsets/crystal_caves.jpg'),
+    uncharted_asteroids: require('../../assets/themes/cosmic_bubble/playsets/uncharted_asteroids.jpg'),
     sound_music_studio: require('../../assets/themes/cosmic_bubble/playsets/sound_music_studio.jpg'),
     emote_animation_studio: require('../../assets/themes/cosmic_bubble/playsets/emote_animation_studio.jpg'),
     secret_star_treehouse: require('../../assets/themes/cosmic_bubble/playsets/secret_star_treehouse.jpg'),
@@ -38,6 +58,12 @@ export const PLAYSETS = {
     cosmic_bus_terminal: require('../../assets/themes/cosmic_bubble/playsets/cosmic_bus_terminal.jpg'),
     fresh_farmers_market: require('../../assets/themes/cosmic_bubble/playsets/fresh_farmers_market.jpg'),
     rainbow_railway_station: require('../../assets/themes/cosmic_bubble/playsets/rainbow_railway_station.jpg'),
+    star_pet_sanctuary: require('../../assets/themes/cosmic_bubble/playsets/star_pet_sanctuary.jpg'),
+    supernova_sports_dome: require('../../assets/themes/cosmic_bubble/playsets/supernova_sports_dome.jpg'),
+    galaxy_music_amphitheater: require('../../assets/themes/cosmic_bubble/playsets/galaxy_music_amphitheater.jpg'),
+    aurora_floating_bazaar: require('../../assets/themes/cosmic_bubble/playsets/aurora_floating_bazaar.jpg'),
+    cyberbot_speed_racetrack: require('../../assets/themes/cosmic_bubble/playsets/cyberbot_speed_racetrack.jpg'),
+    secret_nebula_mythic_shrine: require('../../assets/themes/cosmic_bubble/playsets/secret_nebula_mythic_shrine.jpg'),
 } as const;
 
 export type PlaysetImageKey = keyof typeof PLAYSETS;

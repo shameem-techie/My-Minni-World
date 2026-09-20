@@ -8,17 +8,20 @@ import {
     PETS,
     ROUTINE_BADGE_REWARD,
 } from '../constants/pets';
+import { architectLevelForXp, CLAIM_PLOT_XP, DEPLOY_BLUEPRINT_XP, LAND_PLOTS_BY_ID, STRUCTURE_BLUEPRINTS_BY_ID } from '../constants/landPlots';
 import {
     INITIAL_PROGRESS,
     clearProgress,
     loadProgress,
+    mirrorBlueprintDeploy,
+    mirrorPlotClaim,
     mirrorRoomSave,
     mirrorUnlock,
     persistProgress,
     type ProgressState,
     type RoomSave,
 } from '../services/progress.service';
-import type { PetDef, PlacedProp } from '../types';
+import type { LandCurrency, PetDef, PlacedProp } from '../types';
 import { useAuth } from './AuthContext';
 
 const DAILY_POD_COOLDOWN_MS = 6 * 60 * 60 * 1000; // a "day" for a kid is about six hours of patience
@@ -46,6 +49,11 @@ interface GameContextValue {
     equipPet: (petId: string | null) => void;
     setExplorerName: (name: string) => void;
     resetProgress: () => Promise<void>;
+
+    architectLevel: number;
+    isPlotClaimed: (plotId: string) => boolean;
+    claimPlot: (plotId: string, currency: LandCurrency) => boolean;
+    deployBlueprint: (plotId: string, blueprintId: string, currency: LandCurrency) => boolean;
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -121,6 +129,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         return readyAt > Date.now() ? readyAt : null;
     }, [progress.lastPodClaimAt]);
 
+    const architectLevel = useMemo(() => architectLevelForXp(progress.architectXp), [progress.architectXp]);
+
+    const isPlotClaimed = useCallback((plotId: string) => progress.claimedPlots.includes(plotId), [progress.claimedPlots]);
+
     const value: GameContextValue = {
         progress,
         isReady,
@@ -147,6 +159,42 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
             if (current.stars < cost) return false;
             update((p) => ({ ...p, stars: p.stars - cost, unlocked: [...p.unlocked, ...missing] }));
             missing.forEach((k) => void mirrorUnlock(k));
+            return true;
+        },
+
+        architectLevel,
+        isPlotClaimed,
+
+        claimPlot: (plotId, currency) => {
+            const plot = LAND_PLOTS_BY_ID[plotId];
+            const current = progressRef.current;
+            if (!plot || current.claimedPlots.includes(plotId)) return true;
+            if (architectLevelForXp(current.architectXp) < plot.requiredLevel) return false;
+            const cost = currency === 'stars' ? plot.costStars : plot.costDust;
+            if (current[currency] < cost) return false;
+            update((p) => ({
+                ...p,
+                [currency]: p[currency] - cost,
+                claimedPlots: [...p.claimedPlots, plotId],
+                architectXp: p.architectXp + CLAIM_PLOT_XP,
+            }));
+            void mirrorPlotClaim(plotId);
+            return true;
+        },
+
+        deployBlueprint: (plotId, blueprintId, currency) => {
+            const blueprint = STRUCTURE_BLUEPRINTS_BY_ID[blueprintId];
+            const current = progressRef.current;
+            if (!blueprint || !current.claimedPlots.includes(plotId)) return false;
+            const cost = currency === 'stars' ? blueprint.costStars : blueprint.costDust;
+            if (current[currency] < cost) return false;
+            update((p) => ({
+                ...p,
+                [currency]: p[currency] - cost,
+                plotBlueprints: { ...p.plotBlueprints, [plotId]: blueprintId },
+                architectXp: p.architectXp + DEPLOY_BLUEPRINT_XP,
+            }));
+            void mirrorBlueprintDeploy(plotId, blueprintId);
             return true;
         },
 

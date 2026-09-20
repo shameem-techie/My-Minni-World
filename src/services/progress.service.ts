@@ -20,7 +20,7 @@ export interface RoomSave {
 
 export interface ProgressState {
     stars: number;
-    dust: number; // "Super Star Dust" (the 💎 counter)
+    dust: number; // "Super Star Dust" (the 💎 counter) — also the "diamonds" of the Land Explorer
     unlocked: string[]; // playset keys bought with stars (defaults are always open)
     pets: string[]; // pet ids collected
     equippedPet: string | null;
@@ -28,6 +28,9 @@ export interface ProgressState {
     lastPlaysetKey: string | null;
     rooms: Record<string, RoomSave>;
     explorerName: string;
+    architectXp: number; // Land Explorer progression — see src/constants/landPlots.ts
+    claimedPlots: string[]; // land plot ids the player has claimed
+    plotBlueprints: Record<string, string>; // plot id -> deployed blueprint id, once built
 }
 
 export const INITIAL_PROGRESS: ProgressState = {
@@ -40,6 +43,9 @@ export const INITIAL_PROGRESS: ProgressState = {
     lastPlaysetKey: null,
     rooms: {},
     explorerName: 'Zippy Star',
+    architectXp: 0,
+    claimedPlots: [],
+    plotBlueprints: {},
 };
 
 const KEY_PREFIX = '@mmw:progress:';
@@ -49,7 +55,13 @@ export async function loadProgress(uid: string): Promise<ProgressState> {
         const raw = await AsyncStorage.getItem(KEY_PREFIX + uid);
         if (!raw) return { ...INITIAL_PROGRESS };
         const parsed = JSON.parse(raw) as Partial<ProgressState>;
-        return { ...INITIAL_PROGRESS, ...parsed, rooms: parsed.rooms ?? {} };
+        return {
+            ...INITIAL_PROGRESS,
+            ...parsed,
+            rooms: parsed.rooms ?? {},
+            claimedPlots: parsed.claimedPlots ?? [],
+            plotBlueprints: parsed.plotBlueprints ?? {},
+        };
     } catch {
         return { ...INITIAL_PROGRESS };
     }
@@ -84,6 +96,22 @@ export async function mirrorUnlock(playsetKey: string): Promise<void> {
         await supabase.rpc('unlock_location', { p_location_key: playsetKey });
     } catch {
         /* offline or playset not seeded yet — local copy is authoritative */
+    }
+}
+
+export async function mirrorPlotClaim(plotId: string): Promise<void> {
+    try {
+        await supabase.rpc('claim_land_plot', { p_plot_id: plotId });
+    } catch {
+        /* offline, or migration 0003 not applied yet — local copy is authoritative */
+    }
+}
+
+export async function mirrorBlueprintDeploy(plotId: string, blueprintId: string): Promise<void> {
+    try {
+        await supabase.rpc('deploy_plot_blueprint', { p_plot_id: plotId, p_blueprint_id: blueprintId });
+    } catch {
+        /* see above */
     }
 }
 

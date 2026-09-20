@@ -67,7 +67,11 @@ export interface WardrobeItem {
 
 // ─── Play rooms (the Cosmic Bubble playsets) ───────────────────────────────────
 
-export type DistrictKey = 'island' | 'transit' | 'studios';
+// Was a closed 'island' | 'transit' | 'studios' union. Widened to a plain string so
+// single-playset galaxy sectors (see src/constants/galaxy.ts) can carry their own
+// district value without needing a matching DistrictDef/map screen — every existing
+// call site already treated this as an opaque string key, so nothing else changes.
+export type DistrictKey = string;
 
 export type ZoneCategory = 'community' | 'shopping' | 'homes' | 'travel' | 'food' | 'service' | 'secret';
 
@@ -136,6 +140,23 @@ export interface DistrictDef {
     pins: MapPin[];
 }
 
+// ─── Galaxy (the top-level orbit-sector overview) ──────────────────────────────
+
+export interface GalaxySectorDef {
+    key: string;
+    number: number; // "Orbit Sector NN" display number
+    name: string;
+    emoji: string;
+    x: number; // percent position on the galaxy art
+    y: number;
+    tone: import('../theme').ClayTone;
+    // 'hub' = the Sector 01 pin, opens WorldMap (island/transit/studios switcher).
+    // 'playset' = a single-playset sector, opens straight into that playset (playsetKey required).
+    // 'locked' = no content yet, shows a "Coming Soon" toast, not navigable.
+    kind: 'hub' | 'playset' | 'locked';
+    playsetKey?: string;
+}
+
 export interface PlacedProp {
     id: string;
     propId: string;
@@ -151,11 +172,43 @@ export interface PetDef {
     rarity: 'common' | 'rare' | 'legendary';
 }
 
+// ─── Land Explorer (raw sites → claim → build) ─────────────────────────────────
+// See src/constants/landPlots.ts for the actual data and the design notes on how
+// this differs from the Stitch "Next-Level" manifest's example numbers.
+
+export type LandCurrency = 'stars' | 'dust';
+
+export interface LandPlotDef {
+    id: string; // e.g. 'plot_801'
+    name: string;
+    subtitle: string;
+    plotNumber: string; // display tag, e.g. '#801'
+    costStars: number;
+    costDust: number;
+    requiredLevel: number;
+    image: import('../assets/cosmicBubble').PlotRawImageKey | null; // null = no hero art yet, use tone card
+    tone: import('../theme').ClayTone;
+    emoji: string;
+    perk: string; // one-line flavor, e.g. "+15% Boost · Sunny Land"
+}
+
+export interface StructureBlueprintDef {
+    id: string;
+    name: string;
+    category: 'Cozy Homes' | 'Shops & Cafes' | 'Attractions' | 'Hi-Tech';
+    costStars: number;
+    costDust: number;
+    perks: string[];
+    emoji: string;
+    tone: import('../theme').ClayTone;
+}
+
 // ─── Navigation ──────────────────────────────────────────────────────────────
 
 export type RootStackParamList = {
     Welcome: undefined;
     CharacterCreator: { isFirstMinni?: boolean } | undefined;
+    GalaxyMap: undefined;
     WorldMap: undefined;
     FullscreenMap: { district: DistrictKey };
     Location: { playsetKey: string };
@@ -163,4 +216,6 @@ export type RootStackParamList = {
     StarShop: undefined;
     Settings: undefined;
     HowToPlay: undefined;
+    LandExplorer: undefined;
+    SiteDevelopment: { plotId: string };
 };

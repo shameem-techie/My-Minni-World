@@ -140,6 +140,30 @@ PODS:
     - nanopb/encode (= 3.30910.0)
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
+  - onnxruntime-c (1.30.0)
+  - onnxruntime-react-native (1.24.3):
+    - hermes-engine
+    - onnxruntime-c
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - PromisesObjC (2.4.0)
   - RCTDeprecation (0.81.5)
   - RCTRequired (0.81.5)
@@ -1861,7 +1885,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNGestureHandler (2.28.0):
+  - RNGestureHandler (2.33.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2007,7 +2031,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNSVG (15.12.1):
+  - RNSVG (15.15.5):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2028,9 +2052,9 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-    - RNSVG/common (= 15.12.1)
+    - RNSVG/common (= 15.15.5)
     - Yoga
-  - RNSVG/common (15.12.1):
+  - RNSVG/common (15.15.5):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2134,7 +2158,7 @@ DEPENDENCIES:
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - Expo (from `../node_modules/expo`)
-  - ExpoAsset (from `../node_modules/expo/node_modules/expo-asset/ios`)
+  - ExpoAsset (from `../node_modules/expo-asset/ios`)
   - ExpoCrypto (from `../node_modules/expo-crypto/ios`)
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
   - ExpoFont (from `../node_modules/expo-font/ios`)
@@ -2148,6 +2172,7 @@ DEPENDENCIES:
   - ExpoSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
+  - onnxruntime-react-native (from `../node_modules/onnxruntime-react-native`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
   - RCTRequired (from `../node_modules/react-native/Libraries/Required`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -2236,6 +2261,7 @@ SPEC REPOS:
     - MLKitFaceDetection
     - MLKitVision
     - nanopb
+    - onnxruntime-c
     - PromisesObjC
     - SDWebImage
     - SDWebImageWebPCoder
@@ -2250,7 +2276,7 @@ EXTERNAL SOURCES:
   Expo:
     :path: "../node_modules/expo"
   ExpoAsset:
-    :path: "../node_modules/expo/node_modules/expo-asset/ios"
+    :path: "../node_modules/expo-asset/ios"
   ExpoCrypto:
     :path: "../node_modules/expo-crypto/ios"
   ExpoFileSystem:
@@ -2278,6 +2304,8 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2025-07-07-RNv0.81.0-e0fc67142ec0763c6b6153ca2bf96df815539782
+  onnxruntime-react-native:
+    :path: "../node_modules/onnxruntime-react-native"
   RCTDeprecation:
     :path: "../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation"
   RCTRequired:
@@ -2455,6 +2483,8 @@ SPEC CHECKSUMS:
   MLKitFaceDetection: d50aff1a44aa9a4e95f7e208298a3ce40b68f9f8
   MLKitVision: fa8dea9012ac59497c79ddbe9ebf32051047ac4c
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
+  onnxruntime-c: 36ca0f2cdbc89c6b330ec5287c3faf5ca6ed394d
+  onnxruntime-react-native: cdf9e1014c72729a544382124307f624d149433e
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCTDeprecation: 943572d4be82d480a48f4884f670135ae30bf990
   RCTRequired: 8f3cfc90cc25cf6e420ddb3e7caaaabc57df6043
@@ -2522,16 +2552,16 @@ SPEC CHECKSUMS:
   ReactCommon: e6e232202a447d353e5531f2be82f50f47cbaa9a
   ReactNativeDependencies: 71ce9c28beb282aa720ea7b46980fff9669f428a
   RNCAsyncStorage: e85a99325df9eb0191a6ee2b2a842644c7eb29f4
-  RNGestureHandler: 6a488ce85c88e82d8610db1108daf04e9b2d5162
+  RNGestureHandler: 67d396d5cbf2c1a8e67a673b8f2334ff77562372
   RNMLKitFaceDetection: ef91f2a53dd30544805a4730bac4a91e3eae31dc
   RNReanimated: ccdeb3ccba11e8117b3d2bf50fb9c0543a8af11a
   RNScreens: dd61bc3a3e6f6901ad833efa411917d44827cf51
-  RNSVG: 2825ee146e0f6a16221e852299943e4cceef4528
+  RNSVG: 7ee8661638d428c6a674f4f27e6a56a877e5a14b
   RNWorklets: 28ee7370ca8da356fcc914e3e68b97e9752196d2
   SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
   SDWebImageWebPCoder: 0e06e365080397465cc73a7a9b472d8a3bd0f377
   Yoga: 3fd22c2cae22d7a2b0f0b538f55f7c2a17dc94d5
 
-PODFILE CHECKSUM: 08b08e634c340a5676e3bfd055f22fc505fe686b
+PODFILE CHECKSUM: 7bbe7f9947d7ced31928879571a793364ad09c82
 
 COCOAPODS: 1.16.2

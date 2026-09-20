@@ -242,9 +242,9 @@ export function CharacterCreatorScreen({ navigation, route }: Props) {
         setIsSaving(true);
         try {
             await saveActiveMinni(user.uid, name.trim() || 'Minni', appearance, existing);
-            if (isFirstMinni) navigation.replace('WorldMap');
+            if (isFirstMinni) navigation.replace('GalaxyMap');
             else if (navigation.canGoBack()) navigation.goBack();
-            else navigation.replace('WorldMap');
+            else navigation.replace('GalaxyMap');
         } catch (err) {
             console.warn('Could not save Minni', err);
             const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
@@ -263,7 +263,7 @@ export function CharacterCreatorScreen({ navigation, route }: Props) {
                     <LinearGradient colors={GRADIENT_LILAC_CARD} style={styles.stage}>
                         <FloatingBubbles count={4} seed={11} />
                         <View style={styles.stageTop}>
-                            {!isFirstMinni && <CircleButton icon="arrow-back" tone="snow" size={40} onPress={() => (navigation.canGoBack() ? navigation.goBack() : navigation.replace('WorldMap'))} />}
+                            {!isFirstMinni && <CircleButton icon="arrow-back" tone="snow" size={40} onPress={() => (navigation.canGoBack() ? navigation.goBack() : navigation.replace('GalaxyMap'))} />}
                             <View style={styles.namePill}>
                                 <Text style={{ fontSize: 14 }}>✏️</Text>
                                 <TextInput

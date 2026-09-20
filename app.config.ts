@@ -80,6 +80,11 @@ const config: ExpoConfig = {
                 ios: { deploymentTarget: '16.4' },
             },
         ],
+        'expo-asset',
+        // On-device AI cartoonizer for the selfie face photo (assets/models/photo2cartoon.onnx,
+        // MIT-licensed — see assets/models/THIRD_PARTY_LICENSES.md). Links the native ONNX
+        // Runtime module so InferenceSession is available at runtime.
+        'onnxruntime-react-native',
     ],
 };
 

@@ -50,7 +50,7 @@ export function SettingsScreen({ navigation }: Props) {
     return (
         <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
             <View style={styles.header}>
-                <CircleButton icon="arrow-back" tone="snow" onPress={() => (navigation.canGoBack() ? navigation.goBack() : navigation.replace('WorldMap'))} />
+                <CircleButton icon="arrow-back" tone="snow" onPress={() => (navigation.canGoBack() ? navigation.goBack() : navigation.replace('GalaxyMap'))} />
                 <Text style={styles.title}>Settings</Text>
                 <View style={{ width: 44 }} />
             </View>

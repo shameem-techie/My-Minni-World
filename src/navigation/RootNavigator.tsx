@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { navigationRef } from './navigationRef';
 import { WelcomeScreen } from '../screens/onboarding/WelcomeScreen';
 import { CharacterCreatorScreen } from '../screens/creator/CharacterCreatorScreen';
+import { GalaxyMapScreen } from '../screens/world/GalaxyMapScreen';
 import { WorldMapScreen } from '../screens/world/WorldMapScreen';
 import { FullscreenWorldMapScreen } from '../screens/world/FullscreenWorldMapScreen';
 import { LocationScreen } from '../screens/world/LocationScreen';
@@ -13,6 +14,8 @@ import { PlayRoomScreen } from '../screens/playroom/PlayRoomScreen';
 import { StarShopScreen } from '../screens/shop/StarShopScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
 import { HowToPlayScreen } from '../screens/settings/HowToPlayScreen';
+import { LandExplorerScreen } from '../screens/land/LandExplorerScreen';
+import { SiteDevelopmentScreen } from '../screens/land/SiteDevelopmentScreen';
 import { COLORS } from '../theme';
 import type { RootStackParamList } from '../types';
 
@@ -45,6 +48,7 @@ export function RootNavigator() {
             >
                 <Stack.Screen name="Welcome" component={WelcomeScreen} />
                 <Stack.Screen name="CharacterCreator" component={CharacterCreatorScreen} />
+                <Stack.Screen name="GalaxyMap" component={GalaxyMapScreen} options={{ animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="WorldMap" component={WorldMapScreen} />
                 <Stack.Screen name="FullscreenMap" component={FullscreenWorldMapScreen} options={{ animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="Location" component={LocationScreen} options={{ animation: 'slide_from_right' }} />
@@ -52,6 +56,8 @@ export function RootNavigator() {
                 <Stack.Screen name="StarShop" component={StarShopScreen} />
                 <Stack.Screen name="Settings" component={SettingsScreen} options={{ animation: 'slide_from_bottom' }} />
                 <Stack.Screen name="HowToPlay" component={HowToPlayScreen} options={{ animation: 'slide_from_right' }} />
+                <Stack.Screen name="LandExplorer" component={LandExplorerScreen} />
+                <Stack.Screen name="SiteDevelopment" component={SiteDevelopmentScreen} options={{ animation: 'slide_from_right' }} />
             </Stack.Navigator>
         </NavigationContainer>
     );

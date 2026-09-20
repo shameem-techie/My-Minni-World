@@ -23,7 +23,12 @@ module.exports = function (api) {
                     },
                 },
             ],
-            'react-native-reanimated/plugin',
+            // Reanimated 4 moved worklet compilation out into its own package — leaving
+            // the old 'react-native-reanimated/plugin' here (its pre-4.x name) silently
+            // stops worklets from compiling correctly instead of erroring, which is what
+            // broke FaceCropModal's pinch/pan (its gesture handlers are worklets). Must
+            // be the last plugin in this list per react-native-worklets' own docs.
+            'react-native-worklets/plugin',
         ],
     };
 };

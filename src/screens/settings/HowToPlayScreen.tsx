@@ -143,7 +143,7 @@ export function HowToPlayScreen({ navigation }: Props) {
                     <Step text="Reset progress clears stars, pets, unlocks and decorations (your Minni stays). Sign out returns to the Welcome screen." />
                 </Section>
 
-                <CosmicButton label="Got it — let's play!" leading="🚀" size="lg" onPress={() => navigation.navigate('WorldMap')} style={{ marginTop: 6 }} />
+                <CosmicButton label="Got it — let's play!" leading="🚀" size="lg" onPress={() => navigation.navigate('GalaxyMap')} style={{ marginTop: 6 }} />
             </ScrollView>
         </SafeAreaView>
     );

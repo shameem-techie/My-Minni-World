@@ -48,11 +48,11 @@
       <true/>
     </dict>
     <key>NSCameraUsageDescription</key>
-    <string>We use your camera so your Minni can have a profile picture.</string>
+    <string>We use your camera so your Minni can use your real face.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your microphone</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>We use your photo library so your Minni can have a profile picture.</string>
+    <string>We use your photo library so your Minni can use your real face.</string>
     <key>RCTNewArchEnabled</key>
     <true/>
     <key>UILaunchStoryboardName</key>

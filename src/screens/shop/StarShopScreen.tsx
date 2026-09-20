@@ -121,7 +121,7 @@ export function StarShopScreen({ navigation }: Props) {
                             {progress.stars.toLocaleString()} <Text style={styles.stashUnit}>STARS</Text>
                         </Text>
                     </View>
-                    <CosmicButton label="Earn" leading="🚀" size="sm" onPress={() => navigation.navigate('WorldMap')} />
+                    <CosmicButton label="Earn" leading="🚀" size="sm" onPress={() => navigation.navigate('GalaxyMap')} />
                 </Card>
 
                 {/* Gacha */}

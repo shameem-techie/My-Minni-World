@@ -3,28 +3,29 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { PLAYSETS } from '../../constants/playsets';
-import { useGame } from '../../context/GameContext';
 import { COSMIC, TYPOGRAPHY } from '../../theme';
 import type { RootStackParamList } from '../../types';
 import { Bouncy } from '../fx/Bouncy';
 
-export type TabKey = 'map' | 'room' | 'avatar' | 'shop';
+export type TabKey = 'map' | 'land' | 'avatar' | 'shop';
 
 const TABS: { key: TabKey; label: string; emoji: string }[] = [
     { key: 'map', label: 'World Map', emoji: '🗺️' },
-    { key: 'room', label: 'Play Room', emoji: '🚀' },
+    { key: 'land', label: 'Land', emoji: '🏗️' },
     { key: 'avatar', label: 'Avatar', emoji: '🎨' },
     { key: 'shop', label: 'Star Shop', emoji: '🎁' },
 ];
 
-// The four-tab bottom bar from every Stitch in-game screen. Implemented as a plain
-// component rather than a tab navigator so the stack keeps its fade transitions and the
-// "Play Room" tab can jump straight back into whichever room was open last.
+// The bottom bar from every Stitch in-game screen. Implemented as a plain component
+// rather than a tab navigator so the stack keeps its fade transitions. "World Map"
+// always returns to the landing page (explorer header + the galaxy map block + the zone
+// grid), not whichever district/room was last open — there used to be a "Play Room" tab
+// here that jumped straight back into the last-visited room, defaulting to a guessed
+// room on first use; it was confusing (looked like a room picker, wasn't one) and is
+// gone now.
 export function CosmicTabBar({ active }: { active: TabKey }) {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const insets = useSafeAreaInsets();
-    const { progress, isUnlocked } = useGame();
 
     const go = (key: TabKey) => {
         if (key === active) return;
@@ -32,12 +33,9 @@ export function CosmicTabBar({ active }: { active: TabKey }) {
             case 'map':
                 navigation.navigate('WorldMap');
                 break;
-            case 'room': {
-                const last = progress.lastPlaysetKey && isUnlocked(progress.lastPlaysetKey) ? progress.lastPlaysetKey : null;
-                const fallback = PLAYSETS.find((p) => isUnlocked(p.key))?.key ?? PLAYSETS[0].key;
-                navigation.navigate('PlayRoom', { playsetKey: last ?? fallback });
+            case 'land':
+                navigation.navigate('LandExplorer');
                 break;
-            }
             case 'avatar':
                 navigation.navigate('CharacterCreator');
                 break;

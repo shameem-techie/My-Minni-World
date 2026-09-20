@@ -16,6 +16,8 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
 
+import ai.onnxruntime.reactnative.OnnxruntimePackage
+
 class MainApplication : Application(), ReactApplication {
 
   override val reactNativeHost: ReactNativeHost = ReactNativeHostWrapper(
@@ -25,6 +27,16 @@ class MainApplication : Application(), ReactApplication {
             PackageList(this).packages.apply {
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
+
+              // onnxruntime-react-native@1.24.3's own Expo config plugin only wires the
+              // Gradle/Podfile dependency, not this package registration (fixed upstream
+              // in microsoft/onnxruntime#28266, merged 2026-04-30 but not yet in a
+              // published npm release) — without it, RN's autolinked PackageList never
+              // includes OnnxruntimePackage and InferenceSession.create() fails at
+              // startup with "Cannot read property 'install' of null". A fresh
+              // `expo prebuild` regenerates this file and will need this re-added until
+              // the fix ships on npm.
+              add(OnnxruntimePackage())
             }
 
           override fun getJSMainModuleName(): String = ".expo/.virtual-metro-entry"

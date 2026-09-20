@@ -196,6 +196,11 @@ export function FaceCropModal({ visible, sourceUri, sourceSize, onCancel, onConf
                             <ActivityIndicator color={COSMIC.magenta} />
                         </View>
                     )}
+                    {/* react-native-svg must be >=15.14.0 here: earlier versions have a Fabric
+                        iOS bug (fixed by RNSVGSvgView's "betterHitTest", software-mansion/
+                        react-native-svg#2787) where this pointerEvents="none" overlay still
+                        swallows every touch underneath it — Android was unaffected, which is
+                        why pinch/drag looked "iOS-only broken" until this was found. */}
                     <Svg width={viewport} height={viewport} style={StyleSheet.absoluteFillObject} pointerEvents="none">
                         <Defs>
                             <Mask id="guideMask">
